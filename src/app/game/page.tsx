@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Modal from 'react-modal';
 import Countdown from 'react-countdown';
+import { getCategories, getQuestions } from './questions';
 
 export function Question({text}) {
     return (
@@ -23,6 +24,8 @@ export default function Game() {
     const [choices, setChoices] = useState({});
     const [modalIsOpen, setIsOpen] = useState(false);
     const players = ['Julie', 'John', 'Mary'];
+    getCategories().then((res) => console.log(res));
+    getQuestions().then((res) => console.log(res));
 
     function openModal() {
         setIsOpen(true);
