@@ -95,6 +95,11 @@ function Game({questions}) {
             setCurrentQuestion(questions[questionIndex + 1]);
             setRoundTimer(Date.now() + 60000);
             setRoundCompleted(false);
+            let nextPlayers = players.map((p, i) => {
+                p.answeredThisRound = false;
+                return p;
+            });
+            setPlayers(nextPlayers);
         } else {
             setGameCompleted(true);
         }
