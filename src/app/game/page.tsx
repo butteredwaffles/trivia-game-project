@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Modal from 'react-modal';
 import Countdown from 'react-countdown';
 import { getCategories, getQuestions } from './questions';
-
+import Leaderboard from 'src/app/Leader Board/page.tsx';
 export function Question({text}) {
     return (
         <div className="animate-wiggle delay-100 m-auto bg-stone-100 border-stone-400 border-2 w-4/6 p-10 flex items-center justify-center rounded-3xl">
@@ -75,7 +75,7 @@ export default function Game() {
                     <Answer choice="2013" onChosen={onChosen}></Answer>
                 </div>
             </div>
-            
+            <Leaderboard />
         </main>
     );
 }

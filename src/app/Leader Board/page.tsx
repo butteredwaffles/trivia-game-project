@@ -4,7 +4,38 @@ interface LeaderboardEntry {
   name: string;
   score: number;
 }
-
+const leaderboardStyles = {
+    container: {
+      backgroundColor: '#f0f0f0',
+      border: '2px solid #ddd',
+      borderRadius: '10px',
+      padding: '10px',
+      marginTop: '20px',
+    },
+    title: {
+      fontSize: '20px',
+      fontWeight: 'bold',
+    },
+    list: {
+      listStyleType: 'none',
+      padding: 0,
+    },
+    listItem: {
+      margin: '10px 0',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    name: {
+      fontSize: '16px',
+      color: '#333',
+    },
+    score: {
+      fontSize: '18px',
+      color: '#00f', // Blue color for scores
+    },
+  };
+  
 const Leaderboard: React.FC = () => {
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
 
