@@ -1,7 +1,7 @@
 'use client'
 var he = require('he');
 
-type Category = {
+export type Category = {
     name: string
     id: number
 }
@@ -42,8 +42,9 @@ export class Question {
 
 
 export async function getQuestions(quantity: number = 10, type: string = "multiple", difficulty: string = "easy", category: number = -1): Promise<Question[]> {
-    let questions: Array<Question> = [];
-    let cat = category == -1 ? "" : `category={category}`;
+    let questions: Question[] = [];
+    let cat = category === -1 ? "" : `category=${category}`;
+    // console.log(`https://opentdb.com/api.php?amount=${quantity}&difficulty=${difficulty}&type=${type}&${cat}`);
     let resp = await fetch(`https://opentdb.com/api.php?amount=${quantity}&difficulty=${difficulty}&type=${type}&${cat}`);
     let json = await resp.json();
     questions = json["results"].map((r: QuestionConstructor) => new Question(r));

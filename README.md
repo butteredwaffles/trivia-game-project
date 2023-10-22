@@ -16,4 +16,4 @@ The trivia questions are sourced from [OpenTDB](https://opentdb.com/), a sizable
 ## Deployment
 
 This project was deployed using Vercel (who are also the creators of Next.js). In order to deploy, I linked it to the GitHub repository and set a commit to deploy from.
-This app is hosted [here](placeholder).
+This app is hosted [here](https://trivia-game-project-three.vercel.app/).

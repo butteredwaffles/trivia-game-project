@@ -3,14 +3,11 @@ import {AnswerButton} from "./answerbutton";
 import { Player } from "../gametypes";
 
 type GameCompletionProps = {
-    players: Player[]
+    players: Player[],
+    playAgain: () => void;
 }
 
 export function GameCompleted(props: GameCompletionProps) {
-
-    function playAgain(_: string) {
-        window.location.href = "/"
-    }
 
     return (
     <div className="h-screen">
@@ -21,7 +18,7 @@ export function GameCompleted(props: GameCompletionProps) {
             <Leaderboard playerList={props.players}></Leaderboard>
         </div>
         <div className="mt-10 w-2/6 m-auto text-center">
-            <AnswerButton choice="Play again?" onChosen={playAgain}></AnswerButton>
+            <AnswerButton choice="Play again?" onChosen={props.playAgain}></AnswerButton>
         </div>
     </div>
     )

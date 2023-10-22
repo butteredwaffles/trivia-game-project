@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import {Player} from './gametypes';
 import { Question, getQuestions } from './components/questions';
-import { Game, GameCompleted } from './components';
+import { Game, GameCompleted, Options } from './components';
 
 enum GameMode {
   OPTIONS,
@@ -13,38 +13,37 @@ enum GameMode {
 const NUM_QUESTIONS = 1;
 
 export default function Home() {
-  const [mode, setMode] = useState<GameMode>(GameMode.GAME);
+  const [mode, setMode] = useState<GameMode>(GameMode.OPTIONS);
 
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [players, setPlayers] = useState<Player[]>([
-    {name: "Julie", score: 0, answeredThisRound: false},
-    {name: "Max", score: 0, answeredThisRound: false},
-    {name: "Frank", score: 0, answeredThisRound: false}
-]);
+  const [loading, setLoading] = useState(false);
+  const [players, setPlayers] = useState<Player[]>([]);
+
+  function startGame(players: Player[], questions: Question[]) {
+    setPlayers(players);
+    setQuestions(questions);
+    setMode(GameMode.GAME);
+  }
 
   useEffect(() => {
-
-      async function fetchData() {
-          let raw = await getQuestions(NUM_QUESTIONS, "multiple");
-          setQuestions(raw);
-          setLoading(false);
-      }
       document.title = "Trivia Game";
-      fetchData();
-  }, [])
+  })
 
   function onGameCompleted(finishedPlayers: Player[]) {
     setPlayers(finishedPlayers);
     setMode(GameMode.LEADERBOARD);
   }
 
+  function restartGame() {
+    setMode(GameMode.OPTIONS)
+  }
+
   switch (mode) {
     case GameMode.GAME:
       return loading ? (<p>Loading...</p>) : (<Game questions={questions} playerList={players} onGameCompleted={onGameCompleted}></Game>)
     case GameMode.LEADERBOARD:
-      return <GameCompleted players={players}></GameCompleted>
+      return <GameCompleted players={players} playAgain={restartGame}></GameCompleted>
     default:
-      return <p>options screen placeholder</p>
+      return <Options onFormCompletion={startGame} populatedPlayers={players}></Options>
   }
 }
