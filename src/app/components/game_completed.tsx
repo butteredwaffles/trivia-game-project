@@ -1,9 +1,14 @@
 import { Leaderboard } from "./leaderboard";
 import {AnswerButton} from "./answerbutton";
+import { Player } from "../gametypes";
 
-export function GameCompleted({players}) {
+type GameCompletionProps = {
+    players: Player[]
+}
 
-    function playAgain(_) {
+export function GameCompleted(props: GameCompletionProps) {
+
+    function playAgain(_: string) {
         window.location.href = "/"
     }
 
@@ -13,7 +18,7 @@ export function GameCompleted({players}) {
             <p className="text-stone-600 text-4xl text-center">All done!! Good game!</p>
         </div>
         <div className="mt-10 w-2/6 m-auto text-center">
-            <Leaderboard playerList={players}></Leaderboard>
+            <Leaderboard playerList={props.players}></Leaderboard>
         </div>
         <div className="mt-10 w-2/6 m-auto text-center">
             <AnswerButton choice="Play again?" onChosen={playAgain}></AnswerButton>

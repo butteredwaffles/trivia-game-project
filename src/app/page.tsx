@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react';
 import {Player} from './gametypes';
-import { getQuestions } from './components/questions';
+import { Question, getQuestions } from './components/questions';
 import { Game, GameCompleted } from './components';
 
 enum GameMode {
@@ -15,9 +15,9 @@ const NUM_QUESTIONS = 1;
 export default function Home() {
   const [mode, setMode] = useState<GameMode>(GameMode.GAME);
 
-  const [questions, setQuestions] = useState();
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
-  const [players, setPlayers] = useState<Array<Player>>([
+  const [players, setPlayers] = useState<Player[]>([
     {name: "Julie", score: 0, answeredThisRound: false},
     {name: "Max", score: 0, answeredThisRound: false},
     {name: "Frank", score: 0, answeredThisRound: false}

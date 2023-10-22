@@ -33,8 +33,12 @@ const leaderboardStyles = {
     },
   };
   
-export function Leaderboard({playerList}) {
-  const highestScore = Math.max(...playerList.map(p => p.score));
+type LeaderboardProps = {
+  playerList: Player[]
+}
+
+export function Leaderboard(props: LeaderboardProps) {
+  const highestScore = Math.max(...props.playerList.map(p => p.score));
 
   useEffect(() => {
     // Fetch leaderboard data from your JSON file or an API
@@ -44,13 +48,11 @@ export function Leaderboard({playerList}) {
       //.catch((error) => console.error('Error fetching leaderboard data:', error))
   }, []);
 
-  console.log(playerList);
-
   return (
     <div style={leaderboardStyles.container}>
       <h2 style={leaderboardStyles.title}>Leaderboard</h2>
       <ul style={leaderboardStyles.list}>
-        {playerList.map((entry, index) => (
+        {props.playerList.map((entry, index) => (
           <li key={index} style={leaderboardStyles.listItem}>
             {entry.score === highestScore ? "👑" : " "} {entry.name}: {entry.score}
           </li>

@@ -1,31 +1,38 @@
 'use client'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useReducer } from 'react';
 import Modal from 'react-modal';
 import Countdown from 'react-countdown';
-import { Question, getCategories, getQuestions } from './questions';
+import { Question } from './questions';
 import { AnswerButton } from "./answerbutton";
+import { Player } from "../gametypes";
 
-function QuestionElement({text}) {
+type QuestionProps = {
+    text: string
+}
+
+type GameProps = {
+    questions: Question[];
+    playerList: Player[];
+    onGameCompleted: (players: Player[]) => void;
+}
+
+function QuestionElement(props: QuestionProps) {
     return (
         <div className="animate-wiggle delay-100 m-auto bg-stone-100 border-stone-400 border-2 w-4/6 p-10 flex items-center justify-center rounded-3xl">
-            <p className="text-stone-600 text-3xl text-center">{text}</p>
+            <p className="text-stone-600 text-3xl text-center">{props.text}</p>
         </div>
     )
 }
 
 
-export function Game({questions, playerList, onGameCompleted}) {
-    const [players, setPlayers] = useState<Array<Player>>(playerList);
+export function Game(props: GameProps) {
+    const [players, setPlayers] = useState<Array<Player>>(props.playerList);
     const [modalIsOpen, setIsOpen] = useState(false);
     const [questionIndex, setQuestionIndex] = useState(0);
     const [roundTimer, setRoundTimer] = useState(Date.now() + 60000);
     const [roundCompleted, setRoundCompleted] = useState(false);
-    const [currentQuestion, setCurrentQuestion] = useState<Question>(questions[0]);
-    const [selectedAnswer, setSelectedAnswer] = useState();
-
-    useEffect(() => {
-        setCurrentQuestion(questions[0]);
-    }, [])
+    const [currentQuestion, setCurrentQuestion] = useState<Question>(props.questions[0]);
+    const [selectedAnswer, setSelectedAnswer] = useState<string>();
 
     function openModal() {
         setIsOpen(true);
@@ -45,7 +52,7 @@ export function Game({questions, playerList, onGameCompleted}) {
     }
 
     function increaseScore(p_name: string) {
-        let nextPlayers = players.map((p, i) => {
+        let nextPlayers = players.map((p) => {
             if (p_name === p.name) {
                 if (currentQuestion.correct_answer === selectedAnswer) p.score++;
                 p.answeredThisRound = true;
@@ -65,10 +72,10 @@ export function Game({questions, playerList, onGameCompleted}) {
     }
 
     function resetRound() {
-        if (questionIndex + 1 !== questions.length) {
+        if (questionIndex + 1 !== props.questions.length) {
             console.log("Resetting round...")
             setQuestionIndex(questionIndex + 1);
-            setCurrentQuestion(questions[questionIndex + 1]);
+            setCurrentQuestion(props.questions[questionIndex + 1]);
             setRoundTimer(Date.now() + 60000);
             setRoundCompleted(false);
             let nextPlayers = players.map((p, i) => {
@@ -77,7 +84,7 @@ export function Game({questions, playerList, onGameCompleted}) {
             });
             setPlayers(nextPlayers);
         } else {
-            onGameCompleted(players);
+            props.onGameCompleted(players);
         }
         
     }
