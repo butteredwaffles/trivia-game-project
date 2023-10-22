@@ -3,12 +3,7 @@ import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import Countdown from 'react-countdown';
 import { Question, getCategories, getQuestions } from './questions';
-
-export type Player = {
-    name: string,
-    score: number,
-    answeredThisRound: boolean;
-}
+import { AnswerButton } from "./answerbutton";
 
 function QuestionElement({text}) {
     return (
@@ -18,34 +13,14 @@ function QuestionElement({text}) {
     )
 }
 
-function Answer({choice, onChosen}) {
-    return (
-        <button className="bg-stone-100 border-stone-400 border-2 m-5 rounded-3xl transition hover:scale-110 duration-300" onClick={() => onChosen(choice)}>
-            <p className="text-stone-600 text-3xl p-5 text-center m-auto" >{choice}</p>
-        </button>
-    )
-}
 
-function GameCompleted() {
-    return <div className="flex h-screen flex-col items-center">
-         <div className="animate-wiggle delay-100 m-auto bg-stone-100 border-stone-400 border-2 w-4/6 p-10 flex items-center justify-center rounded-3xl">
-            <p className="text-stone-600 text-4xl text-center">All done!! Good game!</p>
-        </div>
-    </div>
-}
-
-function Game({questions}) {
-    const [players, setPlayers] = useState<Array<Player>>([
-        {name: "Julie", score: 0, answeredThisRound: false},
-        {name: "Max", score: 0, answeredThisRound: false},
-        {name: "Frank", score: 0, answeredThisRound: false}
-    ]);
+export function Game({questions, playerList, onGameCompleted}) {
+    const [players, setPlayers] = useState<Array<Player>>(playerList);
     const [modalIsOpen, setIsOpen] = useState(false);
     const [questionIndex, setQuestionIndex] = useState(0);
     const [roundTimer, setRoundTimer] = useState(Date.now() + 60000);
     const [roundCompleted, setRoundCompleted] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState<Question>(questions[0]);
-    const [gameCompleted, setGameCompleted] = useState(false);
     const [selectedAnswer, setSelectedAnswer] = useState();
 
     useEffect(() => {
@@ -83,6 +58,7 @@ function Game({questions}) {
         if (nextPlayers.find(p => p.answeredThisRound == false) === undefined) {
             // everyone has answered
             setRoundTimer(Date.now() + 1);
+            setRoundCompleted(true);
             setTimeout(resetRound, 5000);
         }
         closeModal();
@@ -101,7 +77,7 @@ function Game({questions}) {
             });
             setPlayers(nextPlayers);
         } else {
-            setGameCompleted(true);
+            onGameCompleted(players);
         }
         
     }
@@ -121,8 +97,7 @@ function Game({questions}) {
         setTimeout(resetRound, 5000);
     }
 
-    return gameCompleted ? <GameCompleted></GameCompleted> : (
-        <div className="flex h-screen flex-col items-center">
+    return <div className="flex h-screen flex-col items-center">
             <Modal
                 isOpen={modalIsOpen}
                 onAfterOpen={afterOpenModal}
@@ -133,7 +108,7 @@ function Game({questions}) {
                <div className="grid grid-cols-2 grid-rows-2">
                     {
                         players.map((p) => {
-                            if (!p.answeredThisRound) return <Answer key={p.name} choice={p.name} onChosen={increaseScore}></Answer>
+                            if (!p.answeredThisRound) return <AnswerButton key={p.name} choice={p.name} onChosen={increaseScore}></AnswerButton>
                         })
                     }
                </div>
@@ -146,31 +121,9 @@ function Game({questions}) {
                 
                 <div className="grid grid-cols-2 grid-rows-2">
                     {
-                        currentQuestion.combined_answers.map(a => <Answer key={a} choice={a} onChosen={onChosen}></Answer>)
+                        currentQuestion.combined_answers.map(a => <AnswerButton key={a} choice={a} onChosen={onChosen}></AnswerButton>)
                     }
                 </div>
             </div>
         </div>
-    );
-}
-
-export default function Wrapper() {
-    const [questions, setQuestions] = useState();
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        async function fetchData() {
-            let raw = await getQuestions(10, "multiple");
-            setQuestions(raw);
-            setLoading(false);
-        }
-
-        fetchData();
-    }, [])
-
-    return (
-        
-           loading ? (<p>Loading...</p>) : (<Game questions={questions}></Game>)
-        
-    )
 }

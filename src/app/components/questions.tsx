@@ -33,7 +33,7 @@ export class Question {
         this.category = obj.category;
         this.type = obj.type;
         this.difficulty = obj.difficulty;
-        this.correct_answer = obj.correct_answer;
+        this.correct_answer = he.decode(obj.correct_answer);
         this.question = he.decode(obj.question);
         this.incorrect_answers = obj.incorrect_answers.map(a => he.decode(a));
         this.combined_answers = this.incorrect_answers.concat(this.correct_answer).map(a => he.decode(a)).sort();
