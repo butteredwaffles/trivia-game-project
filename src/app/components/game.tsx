@@ -33,6 +33,7 @@ export function Game(props: GameProps) {
     const [roundCompleted, setRoundCompleted] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState<Question>(props.questions[0]);
     const [selectedAnswer, setSelectedAnswer] = useState<string>();
+    const [multiplier, setMultiplier] = useState<number>(400);
 
     function openModal() {
         setIsOpen(true);
@@ -54,8 +55,9 @@ export function Game(props: GameProps) {
     function increaseScore(p_name: string) {
         let nextPlayers = players.map((p) => {
             if (p_name === p.name) {
-                if (currentQuestion.correct_answer === selectedAnswer) p.score++;
+                if (currentQuestion.correct_answer === selectedAnswer) p.score += multiplier;
                 p.answeredThisRound = true;
+                setMultiplier(multiplier - 100);
             }
             
             return p;
@@ -74,6 +76,7 @@ export function Game(props: GameProps) {
     function resetRound() {
         if (questionIndex + 1 !== props.questions.length) {
             console.log("Resetting round...")
+            setMultiplier(400);
             setQuestionIndex(questionIndex + 1);
             setCurrentQuestion(props.questions[questionIndex + 1]);
             setRoundTimer(Date.now() + 60000);
