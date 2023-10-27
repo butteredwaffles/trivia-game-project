@@ -127,7 +127,7 @@ export function Game(props: GameProps) {
                 style={customStyles}
                 contentLabel="Player"
             >
-                <p className="text-3xl text-center">Who's answering?</p>
+                <p className="text-3xl text-center">Who&#39;s answering?</p>
                 <hr />
                <div className="grid grid-cols-2 grid-rows-2">
                     {
