@@ -70,14 +70,14 @@ export function Options(props: OptionsProps) {
         }
     };
 
-    const inputClasses = "block mt-1 w-full";
+    const inputClasses = "block mt-1 w-full h-8 rounded-md px-2 shadow-md";
 
     return (
         <div className="flex h-screen flex-col items-center w-screen">
-            <div className="animate-wiggle delay-100 m-auto bg-stone-100 border-stone-400 border-2 w-4/6 p-10 flex items-center justify-center rounded-3xl">
-            <p className="text-stone-600 text-3xl text-center">Game Options</p>
+            <div className="animate-wiggle delay-100 m-auto bg-stone-100 shadow-md shadow-inner w-4/6 p-10 flex items-center justify-center rounded-3xl">
+                <p className="text-stone-600 text-3xl text-center">Game Options</p>
             </div>
-            <form id="optionsForm" onSubmit={handleSubmit} className="m-auto bg-stone-100 border-stone-400 border-2 p-10 rounded-3xl">
+            <form id="optionsForm" onSubmit={handleSubmit} className="m-auto bg-stone-100 border-stone-400 p-10 rounded-3xl shadow-xl">
                 <div className="mb-10">
                     <p className="text-xl mb-5">Enter players:</p>
                     <input name="playerOne" id="playerOne" placeholder="Enter player one's name" className={inputClasses} type="text" value={formValues.playerOne} onChange={handleChange} />
@@ -93,7 +93,7 @@ export function Options(props: OptionsProps) {
                 <select
                     name="category"
                     id="category"
-                    className=""
+                    className="scrollbar h-8"
                     value={formValues.category}
                     onChange={handleChange}>
                     {categories.map((category: Category) => (

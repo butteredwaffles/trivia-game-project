@@ -2,9 +2,10 @@
 import { useEffect, useState } from 'react';
 import {Player} from './gametypes';
 import { Question, getQuestions } from './components/questions';
-import { Game, GameCompleted, Options } from './components';
+import { Game, GameCompleted, Options, Startpage } from './components';
 
 enum GameMode {
+  START,
   OPTIONS,
   GAME,
   LEADERBOARD
@@ -13,7 +14,7 @@ enum GameMode {
 const NUM_QUESTIONS = 1;
 
 export default function Home() {
-  const [mode, setMode] = useState<GameMode>(GameMode.OPTIONS);
+  const [mode, setMode] = useState<GameMode>(GameMode.START);
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(false);
@@ -27,7 +28,7 @@ export default function Home() {
 
   useEffect(() => {
       document.title = "Trivia Game";
-  })
+  }, [])
 
   function onGameCompleted(finishedPlayers: Player[]) {
     setPlayers(finishedPlayers);
@@ -43,7 +44,9 @@ export default function Home() {
       return loading ? (<p>Loading...</p>) : (<Game questions={questions} playerList={players} onGameCompleted={onGameCompleted}></Game>)
     case GameMode.LEADERBOARD:
       return <GameCompleted players={players} playAgain={restartGame}></GameCompleted>
-    default:
+    case GameMode.OPTIONS:
       return <Options onFormCompletion={startGame} populatedPlayers={players}></Options>
+    default:
+      return <Startpage nextPageValue={restartGame}></Startpage>
   }
 }
