@@ -63,7 +63,7 @@ export function Options(props: OptionsProps) {
             let players: Player[] = [];
             for (let value of [formValues.playerOne, formValues.playerTwo, formValues.playerThree, formValues.playerFour]) {
                 if (value !== "") {
-                    players.push({name: value, score: 0, answeredThisRound: false});
+                    players.push({name: value, score: 0, answeredThisRound: false, wasCorrect: false});
                 }
             }
             getQuestions(parseInt(formValues.numQuestions), "multiple", "easy", parseInt(formValues.category)).then((questions) => props.onFormCompletion(players, questions));

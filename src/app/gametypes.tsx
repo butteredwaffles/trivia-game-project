@@ -1,6 +1,7 @@
 export type Player = {
     name: string,
     score: number,
-    answeredThisRound: boolean;
+    answeredThisRound: boolean,
+    wasCorrect: boolean;
 }
 

@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react';
 import {Player} from './gametypes';
-import { Question, getQuestions } from './components/questions';
+import { Question } from './components/questions';
 import { Game, GameCompleted, Options, Startpage } from './components';
 
 enum GameMode {
@@ -10,8 +10,6 @@ enum GameMode {
   GAME,
   LEADERBOARD
 }
-
-const NUM_QUESTIONS = 1;
 
 export default function Home() {
   const [mode, setMode] = useState<GameMode>(GameMode.START);
@@ -39,6 +37,7 @@ export default function Home() {
     setMode(GameMode.OPTIONS)
   }
 
+  // Mode lets us keep track of which screen of the game to show
   switch (mode) {
     case GameMode.GAME:
       return loading ? (<p>Loading...</p>) : (<Game questions={questions} playerList={players} onGameCompleted={onGameCompleted}></Game>)

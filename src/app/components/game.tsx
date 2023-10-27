@@ -18,7 +18,7 @@ type GameProps = {
 
 function QuestionElement(props: QuestionProps) {
     return (
-        <div className="animate-wiggle delay-100 m-auto bg-stone-100 border-stone-400 border-2 w-4/6 p-10 flex items-center justify-center rounded-3xl">
+        <div className="animate-wiggle delay-100 m-auto bg-stone-100 shadow-md shadow-inner w-4/6 p-10 flex items-center justify-center rounded-3xl">
             <p className="text-stone-600 text-3xl text-center">{props.text}</p>
         </div>
     )
@@ -45,6 +45,8 @@ export function Game(props: GameProps) {
     function closeModal() {
         setIsOpen(false);
     }
+
+    // Called when an answer is chosen, before a player is selected
     function onChosen(choice: string) {
         if (!roundCompleted) {
             setSelectedAnswer(choice);
@@ -52,10 +54,16 @@ export function Game(props: GameProps) {
         }
     }
 
+    // Called when a player is selected
     function increaseScore(p_name: string) {
         let nextPlayers = players.map((p) => {
             if (p_name === p.name) {
-                if (currentQuestion.correct_answer === selectedAnswer) p.score += multiplier;
+                if (currentQuestion.correct_answer === selectedAnswer) {
+                    p.score += multiplier;
+                    p.wasCorrect = true;
+                } else {
+                    p.wasCorrect = false;
+                }
                 p.answeredThisRound = true;
                 setMultiplier(multiplier - 100);
             }
@@ -73,6 +81,7 @@ export function Game(props: GameProps) {
         closeModal();
     }
 
+    // Called to progress to the next question OR end the game
     function resetRound() {
         if (questionIndex + 1 !== props.questions.length) {
             console.log("Resetting round...")
@@ -83,6 +92,7 @@ export function Game(props: GameProps) {
             setRoundCompleted(false);
             let nextPlayers = players.map((p, i) => {
                 p.answeredThisRound = false;
+                p.wasCorrect = false;
                 return p;
             });
             setPlayers(nextPlayers);
@@ -102,8 +112,10 @@ export function Game(props: GameProps) {
           transform: 'translate(-50%, -50%)',
         },
       };
-      
+    
+      // Called when the timer ends
     function onComplete() {
+        closeModal();
         setTimeout(resetRound, 5000);
     }
 
@@ -115,6 +127,8 @@ export function Game(props: GameProps) {
                 style={customStyles}
                 contentLabel="Player"
             >
+                <p className="text-3xl text-center">Who's answering?</p>
+                <hr />
                <div className="grid grid-cols-2 grid-rows-2">
                     {
                         players.map((p) => {
@@ -126,7 +140,11 @@ export function Game(props: GameProps) {
             <QuestionElement text={currentQuestion.question}></QuestionElement>
             <div className="m-auto w-3/6">
                 <div className='m-auto text-center'><Countdown className="text-3xl text-stone-600" date={roundTimer} onComplete={onComplete} key={roundTimer}>
-                     <p>The correct answer is <strong>{currentQuestion.correct_answer}</strong>!</p>
+                     <p>The correct answer is <strong>{currentQuestion.correct_answer}</strong>! {
+                        players.filter((p) => p.wasCorrect).length === 0 ? 
+                            <span className="text-red-900">No one got points :&#40;</span> : 
+                            <span className="text-green-400">Points for {players.filter(p => p.wasCorrect).map((p) => p.name).join(', ')}!</span>
+                     }</p>
                 </Countdown></div>
                 
                 <div className="grid grid-cols-2 grid-rows-2">
